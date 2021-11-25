@@ -139,6 +139,7 @@ declare namespace CameraRoll {
   interface Album {
     title: string;
     count: number;
+    localId?: string;
   }
 
   type SaveToCameraRollOptions = {
