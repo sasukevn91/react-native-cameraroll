@@ -8,7 +8,7 @@
  * @format
  */
 'use strict';
-import {Platform} from 'react-native';
+import { Platform } from 'react-native';
 import RNCCameraRoll from './nativeInterface';
 
 const invariant = require('fbjs/lib/invariant');
@@ -175,18 +175,18 @@ class CameraRoll {
     tag: string,
     options: SaveToCameraRollOptions = {},
   ): Promise<string> {
-    let {type = 'auto', album = ''} = options;
+    let { type = 'auto', album = '' } = options;
     invariant(
       typeof tag === 'string',
       'CameraRoll.saveToCameraRoll must be a valid string.',
     );
     invariant(
       options.type === 'photo' ||
-        options.type === 'video' ||
-        options.type === 'auto' ||
-        options.type === undefined,
+      options.type === 'video' ||
+      options.type === 'auto' ||
+      options.type === undefined,
       `The second argument to saveToCameraRoll must be 'photo' or 'video' or 'auto'. You passed ${type ||
-        'unknown'}`,
+      'unknown'}`,
     );
     if (type === 'auto') {
       if (['mov', 'mp4'].indexOf(tag.split('.').slice(-1)[0]) >= 0) {
@@ -195,7 +195,7 @@ class CameraRoll {
         type = 'photo';
       }
     }
-    return RNCCameraRoll.saveToCameraRoll(tag, {type, album});
+    return RNCCameraRoll.saveToCameraRoll(tag, { type, album });
   }
   static saveToCameraRoll(
     tag: string,
@@ -204,16 +204,22 @@ class CameraRoll {
     console.warn(
       'CameraRoll.saveToCameraRoll(tag, type) is deprecated.  Use the save function instead',
     );
-    return CameraRoll.save(tag, {type});
+    return CameraRoll.save(tag, { type });
   }
   static getAlbums(
-    params?: GetAlbumsParams = {assetType: ASSET_TYPE_OPTIONS.All},
+    params?: GetAlbumsParams = { assetType: ASSET_TYPE_OPTIONS.All },
   ): Promise<Album[]> {
     return RNCCameraRoll.getAlbums(params);
   }
 
+  static getSmartAlbums(
+    params?: GetAlbumsParams = { assetType: ASSET_TYPE_OPTIONS.All },
+  ): Promise<Album[]> {
+    return RNCCameraRoll.getSmartAlbums(params);
+  }
+
   static getParamsWithDefaults(params: GetPhotosParams): GetPhotosParams {
-    const newParams = {...params};
+    const newParams = { ...params };
     if (!newParams.assetType) {
       newParams.assetType = ASSET_TYPE_OPTIONS.All;
     }
@@ -238,7 +244,7 @@ class CameraRoll {
         'CameraRoll.getPhotos(tag, success, error) is deprecated.  Use the returned Promise instead',
       );
       let successCallback = arguments[1];
-      const errorCallback = arguments[2] || (() => {});
+      const errorCallback = arguments[2] || (() => { });
       promise.then(successCallback, errorCallback);
     }
 
