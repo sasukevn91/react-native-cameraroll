@@ -177,6 +177,8 @@ declare namespace CameraRoll {
   function getPhotos(params: GetPhotosParams): Promise<PhotoIdentifiersPage>;
 
   function getAlbums(params: GetAlbumsParams): Promise<Album[]>;
+
+  function getSmartAlbums(params: GetAlbumsParams): Promise<Album[]>;
 }
 
 export = CameraRoll;
