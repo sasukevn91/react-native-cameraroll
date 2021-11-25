@@ -90,6 +90,8 @@ export type GetPhotosParams = {
    * might have some performance impact.
    */
   include?: Include[],
+
+  localId?: string,
 };
 
 export type PhotoIdentifier = {
@@ -137,6 +139,7 @@ export type GetAlbumsParams = {
 export type Album = {
   title: string,
   count: number,
+  localId?: string
 };
 
 /**

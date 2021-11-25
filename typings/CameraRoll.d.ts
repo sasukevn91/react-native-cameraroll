@@ -86,6 +86,8 @@ declare namespace CameraRoll {
      * might have some performance impact.
      */
     include?: Include[];
+
+    localId?: string,
   }
 
   interface PhotoIdentifier {

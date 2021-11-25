@@ -227,7 +227,8 @@ RCT_EXPORT_METHOD(getAlbums:(NSDictionary *)params
     if (assetsFetchResult.count > 0) {
       [result addObject:@{
         @"title": [obj localizedTitle],
-        @"count": @(assetsFetchResult.count)
+        @"count": @(assetsFetchResult.count),
+        @"localId": [obj localIdentifier]
       }];
     }
   }];
@@ -255,7 +256,8 @@ RCT_EXPORT_METHOD(getSmartAlbums:(NSDictionary *)params
       if (assetsFetchResult.count > 0) {
           [result addObject:@{
             @"title": [obj localizedTitle],
-            @"count": @(assetsFetchResult.count)
+            @"count": @(assetsFetchResult.count),
+            @"localId": [obj localIdentifier]
           }];
       }
       }];
@@ -299,6 +301,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
   NSString *const groupName = [RCTConvert NSString:params[@"groupName"]];
   NSString *const groupTypes = [[RCTConvert NSString:params[@"groupTypes"]] lowercaseString];
   NSString *const mediaType = [RCTConvert NSString:params[@"assetType"]];
+  NSString *const localId = [RCTConvert NSString:params[@"localId"]];
   NSUInteger const fromTime = [RCTConvert NSInteger:params[@"fromTime"]];
   NSUInteger const toTime = [RCTConvert NSInteger:params[@"toTime"]];
   NSArray<NSString *> *const mimeTypes = [RCTConvert NSStringArray:params[@"mimeTypes"]];
@@ -441,12 +444,12 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
       }];
     };
 
-    if ([groupTypes isEqualToString:@"all"]) {
-      PHFetchResult <PHAsset *> *const assetFetchResult = [PHAsset fetchAssetsWithOptions: assetFetchOptions];
-      currentCollectionName = @"All Photos";
-      [assetFetchResult enumerateObjectsUsingBlock:collectAsset];
-    } else {
-      PHFetchResult<PHAssetCollection *> *const assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithType:collectionType subtype:collectionSubtype options:collectionFetchOptions];
+    // if ([groupTypes isEqualToString:@"all"]) {
+    //   PHFetchResult <PHAsset *> *const assetFetchResult = [PHAsset fetchAssetsWithOptions: assetFetchOptions];
+    //   currentCollectionName = @"All Photos";
+    //   [assetFetchResult enumerateObjectsUsingBlock:collectAsset];
+    // } else {
+      PHFetchResult<PHAssetCollection *> *const assetCollectionFetchResult = [PHAssetCollection fetchAssetCollectionsWithLocalIdentifiers:@[localId] options:NULL];
       [assetCollectionFetchResult enumerateObjectsUsingBlock:^(PHAssetCollection * _Nonnull assetCollection, NSUInteger collectionIdx, BOOL * _Nonnull stopCollections) {
         // Enumerate assets within the collection
         PHFetchResult<PHAsset *> *const assetsFetchResult = [PHAsset fetchAssetsInAssetCollection:assetCollection options:assetFetchOptions];
@@ -454,7 +457,7 @@ RCT_EXPORT_METHOD(getPhotos:(NSDictionary *)params
         [assetsFetchResult enumerateObjectsUsingBlock:collectAsset];
         *stopCollections = stopCollections_;
       }];
-    }
+    // }
 
     // If we get this far and haven't resolved the promise yet, we reached the end of the list of photos
     if (!resolvedPromise) {
